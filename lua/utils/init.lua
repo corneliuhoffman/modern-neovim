@@ -1,6 +1,6 @@
 local M = {}
 
-function M.smart_quit()
+function M.quit()
   local bufnr = vim.api.nvim_get_current_buf()
   local buf_windows = vim.call("win_findbuf", bufnr)
   local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
@@ -17,10 +17,13 @@ function M.smart_quit()
   end
 end
 
-function M.version()
-  local v = vim.version()
-  if v and not v.prerelease then
-    vim.notify(("Neovim v%d.%d.%d"):format(v.major, v.minor, v.patch), vim.log.levels.WARN, { title = "Neovim: not running nightly!" })
+function M.find_files()
+  local opts = {}
+  local telescope = require "telescope.builtin"
+
+  local ok = pcall(telescope.git_files, opts)
+  if not ok then
+    telescope.find_files(opts)
   end
 end
 
